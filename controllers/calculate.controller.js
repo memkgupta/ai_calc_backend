@@ -2,21 +2,15 @@ import User from "../models/user.model.js";
 import ImageAnalyzer from "../utils/index.js";
 
 export const calculate = async(req,res)=>{
-    if (!req.file) {
-        return res.status(400).json({ message: 'No Image uploaded.' });
-      }
-const _user = req.user;
-const user = await User.findById(_user.userId);
-if(!user){
-    res.status(200).json({success:false,message:"Invalid session , please login again"})
-}
+
 const {dict} = req.body;
 const analyzer = ImageAnalyzer.getInstance();
-const buffer = req.file.buffer;
+const buffer = req.body.image.split(',')[1];
+const image = Buffer.from(buffer,'base64');
 try {
     console.log(dict)
-    const dictParsed = JSON.parse(dict||{})
-    const resp =await analyzer.analyzeImage(buffer,dictParsed);
+   
+    const resp =await analyzer.analyzeImage(image,dict);
    res.status(200).json({success:true,data:resp});
 } catch (error) {
     console.log(error);

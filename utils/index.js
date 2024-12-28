@@ -14,6 +14,7 @@ class ImageAnalyzer {
         return ImageAnalyzer.instance;
     }
     async preprocessImage(imageBuffer) {
+        console.log(imageBuffer)
         const processedImage = await sharp(imageBuffer)
             .jpeg()
             .toBuffer();
@@ -70,8 +71,9 @@ class ImageAnalyzer {
 
             const response = result.response;
            let text = response.text();
+           
            text= text.replace(/```json|```/g, '').trim()
-            console.log(text);
+
             // Parse the response
             let answers = [];
             try {

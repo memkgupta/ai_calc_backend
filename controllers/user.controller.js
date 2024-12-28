@@ -46,7 +46,7 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ userId:user._id }, JWT_SECRET, { expiresIn: '1h' });
 
-    res.status(200).json({ message: 'Login successful.', token });
+    res.status(200).json({ message: 'Login successful.', token,email:user.email,name:user.name,id:user._id });
   } catch (error) {
     res.status(500).json({ message: 'Internal server error.', error: error.message });
   }
@@ -55,12 +55,13 @@ export const login = async (req, res) => {
 // Get Current User Details
 export const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    console.log(req.user)
+    const user = await User.findById(req.user.userId).select('-password');
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
     }
 
-    res.status(200).json(user);
+    res.status(200).json({id:user._id,email:user.email,name:user.name});
   } catch (error) {
     res.status(500).json({ message: 'Internal server error.', error: error.message });
   }
